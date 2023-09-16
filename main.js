@@ -1,8 +1,8 @@
 let contacts = []
 
 function addContact(event) {
- event.preventDefault()
- let form = event.target 
+  event.preventDefault()
+  let form = event.target
 
   let contact = {
     id: generateId(),
@@ -19,26 +19,35 @@ function addContact(event) {
 function saveContacts() {
 
   window.localStorage.setItem("localContacts", JSON.stringify(contacts))
-
+  drawContacts()
 }
 
 function loadContacts() {
 
   let localContactsData = JSON.parse(window.localStorage.getItem('localContacts'))
-  if (localContactsData){
+  if (localContactsData) {
     contacts = localContactsData
   }
 }
 
-/**
- * This function targets the contacts-list on the 
- * DOM and adds a new div element for each of the
- * contacts in the contacts array
- */
 function drawContacts() {
-
-  
-
+  let contactListElement = document.getElementById("contact-list")
+  let template = ""
+  contacts.forEach(contact => {
+    template += `
+    <div class="contact-card card mt-1 mb-1 ${contact.emergencyContact ? 'emergency-contact' : ''}">
+      <h3 class="mt-1 mb-1">${contact.name}</h3>
+      <div class="d-flex space-between">
+        <p>
+          <i class="fa fa-fw fa-phone"></i>
+          <span>${contact.phone}</span>
+        </p>
+        <i class="action fa fa-trash text-danger" onclick="removeContact('${contact.id}')"></i>
+      </div>
+    </div>
+    `
+  })
+  contactListElement.innerHTML = template
 }
 
 /**
@@ -51,12 +60,19 @@ function drawContacts() {
  * @param {string} contactId 
  */
 function removeContact(contactId) {
+  let index = contacts.findIndex(contact => contact.id == contactId)
+  if (index == -1) {
+    throw new Error("Invalid Contact Id")
+  }
+  contacts.splice(index, 1)
+  saveContacts()
 }
 
 /**
  * Toggles the visibility of the AddContact Form
- */
+ */ 
 function toggleAddContactForm() {
+  document.getElementById('new-contact-form').classList.toggle("hidden")
 }
 
 
