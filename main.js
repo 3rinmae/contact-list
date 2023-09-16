@@ -1,30 +1,33 @@
 let contacts = []
 
-/**
- * Called when submitting the new Contact Form
- * This method will pull data from the form
- * use the provided function to give the data an id
- * then add that data to the contacts list.
- * Then reset the form
- * *** hints:
- * *** push: resources/push.jpg
- */
 function addContact(event) {
+ event.preventDefault()
+ let form = event.target 
+
+  let contact = {
+    id: generateId(),
+    name: form.name.value,
+    phone: form.phone.value,
+    emergencyContact: form.emergencyContact.checked
+  }
+
+  contacts.push(contact)
+  saveContacts()
+  form.reset()
 }
 
-/**
- * Converts the contacts array to a JSON string then
- * Saves the string to localstorage at the key contacts 
- */
 function saveContacts() {
+
+  window.localStorage.setItem("localContacts", JSON.stringify(contacts))
+
 }
 
-/**
- * Attempts to retrieve the contacts string from localstorage
- * then parses the JSON string into an array. Finally sets
- * the contacts array to the retrieved array
- */
 function loadContacts() {
+
+  let localContactsData = JSON.parse(window.localStorage.getItem('localContacts'))
+  if (localContactsData){
+    contacts = localContactsData
+  }
 }
 
 /**
@@ -33,6 +36,9 @@ function loadContacts() {
  * contacts in the contacts array
  */
 function drawContacts() {
+
+  
+
 }
 
 /**
